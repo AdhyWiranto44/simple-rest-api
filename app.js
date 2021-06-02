@@ -72,6 +72,36 @@ app.post('/new-post', (req, res, next) => {
     }
 });
 
+app.put('/update-post/:postSlug', (req, res, next) => {
+    try {
+        Post.findOneAndUpdate(
+            {slug: req.params.postSlug}, 
+            {
+                title: req.body.title,
+                body: req.body.body,
+                updated_at: new Date()
+            }).exec()
+
+        .then(updatedPost => {
+            if (updatedPost) {
+                res.status(200).json({
+                    'message': 'Post updated successfully!'
+                });
+            } else {
+                res.status(400).json({
+                    'message': 'There is no such post!'
+                });
+            }
+        })
+
+        .then(null, next);
+    } catch (err) {
+        res.status(500).json({
+            'message': err
+        });
+    }
+});
+
 app.delete('/delete-post/:postSlug', (req, res, next) => {
     try {
         Post.findOneAndDelete({slug: req.params.postSlug}).exec()
