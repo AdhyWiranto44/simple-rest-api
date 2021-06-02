@@ -32,7 +32,7 @@ app.get("/", (req, res, next) => {
     } catch (err) {
         res.status(400).json({
             'message': 'Error: ' + err
-        })
+        });
     }
 });
 
@@ -74,22 +74,18 @@ app.post('/new-post', (req, res, next) => {
 
 app.delete('/delete-post/:postSlug', (req, res, next) => {
     try {
-        Post.find({slug: req.params.postSlug}).exec()
+        Post.findOneAndDelete({slug: req.params.postSlug}).exec()
 
         .then(foundPost => {
-            if (foundPost.length > 0) {
-                Post.remove({slug: req.params.postSlug}).exec();
+            if (foundPost) {
+                res.status(200).json({
+                    'message': 'Post deleted successfully!'
+                });
             } else {
                 res.status(400).json({
                     'message': 'Cannot delete post because the post does not found.'
-                })
+                });
             }
-        })
-
-        .then(() => {
-            res.status(200).json({
-                'message': 'Post deleted successfully!'
-            })
         })
 
         .then(null, next);
@@ -104,8 +100,8 @@ app.delete('/delete-post/:postSlug', (req, res, next) => {
 app.get('*', (req, res) => {
     res.status(404).json({
         'message': 'Not found.'
-    })
-})
+    });
+});
 
 app.listen(process.env.PORT, () => {
     console.log(`http://localhost:${process.env.PORT}`);
