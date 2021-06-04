@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 
 app.get("/", (req, res, next) => {
     try {
-        Post.find().exec()
+        Post.find().sort({created_at: -1}).exec()
     
         .then((foundPosts) => {
             if (foundPosts.length < 1) {
@@ -37,39 +37,37 @@ app.get("/", (req, res, next) => {
 });
 
 app.post('/new-post', (req, res, next) => {
-    try {
-        const newPost = new Post({
-            title: req.body.title,
-            slug: req.body.title.replace(/\s+/g, '-').toLowerCase(),
-            body: req.body.body,
-            created_at: new Date,
-            updated_at: new Date,
-        });
+    const newPost = new Post({
+        title: req.body.title,
+        slug: req.body.title.replace(/\s+/g, '-').toLowerCase(),
+        body: req.body.body,
+        created_at: new Date,
+        updated_at: new Date,
+    });
 
-        Post.find({slug: newPost.slug}).exec()
+    Post.find({slug: newPost.slug}).exec()
 
-        .then(foundPost => {
-            if (foundPost.length > 0) {
-                res.status(400).json({
-                    'message': 'Please change the post title'
-                });
-            } else {
-                newPost.save();
-            }
-        })
-        
-        .then(() => {
-            res.status(200).json({
-                'message': "Posts added successfully!"
+    .then(foundPost => {
+        if (foundPost.length > 0) {
+            res.status(400).json({
+                'message': 'There is post title like your input, please try again with another title.'
             });
-        })
+        } else {
+            return newPost.save();
+        }
+    })
     
-        .then(null, next);
-    } catch(err) {
-        res.status(500).json({
-            'message': 'Failed to add new post, input undefined!'
+    .then(() => {
+        res.status(200).json({
+            'message': "Posts added successfully!"
         });
-    }
+    })
+
+    .catch((err) => {
+        res.status(400).json({
+            'message': err.toString().split(",")
+        });
+    });
 });
 
 app.put('/update-post/:postSlug', (req, res, next) => {
