@@ -11,7 +11,7 @@ mongoose.connect(`mongodb://localhost:27017/${process.env.DB_NAME}`, {useNewUrlP
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
+app.get("/api/posts", (req, res) => {
     Post.find().sort({created_at: -1}).exec() // cari semua data
 
     .then((foundPosts) => {
@@ -34,7 +34,7 @@ app.get("/", (req, res) => {
     });
 });
 
-app.post('/new-post', (req, res) => {
+app.post('/api/posts', (req, res) => {
     // mempersiapkan data post baru
     const newPost = new Post({
         title: req.body.title,
@@ -69,7 +69,30 @@ app.post('/new-post', (req, res) => {
     });
 });
 
-app.put('/update-post/:postSlug', (req, res) => {
+app.get('/api/posts/:postSlug', (req, res) => {
+    Post.find({slug: req.params.postSlug}).exec() // cari data berdasarkan slug
+
+    .then((foundPosts) => {
+        if (foundPosts.length < 1) { // jika tidak ada data
+            res.status(404).json({
+                'message': "Posts unavailable!"
+            });
+        } else {
+            res.status(200).json({ // jika ketemu, tampilkan
+                'message': "Posts found!",
+                'data': foundPosts
+            });
+        }
+    })
+
+    .catch(err => { // error handling
+        res.status(500).json({
+            'message': 'Error: ' + err
+        });
+    });
+});
+
+app.put('/api/posts/:postSlug', (req, res) => {
     // cari post lalu update berdasarkan slug-nya
     Post.findOneAndUpdate(
         {slug: req.params.postSlug}, 
@@ -100,7 +123,7 @@ app.put('/update-post/:postSlug', (req, res) => {
     });
 });
 
-app.delete('/delete-post/:postSlug', (req, res, next) => {
+app.delete('/api/posts/:postSlug', (req, res) => {
     Post.findOneAndDelete({slug: req.params.postSlug}).exec() // cari dan hapus 1 data berdasarkan slug-nya
 
     .then(deletedPost => {

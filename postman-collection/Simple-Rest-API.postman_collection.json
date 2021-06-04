@@ -11,12 +11,16 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000",
+					"raw": "http://localhost:3000/api/posts",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "3000"
+					"port": "3000",
+					"path": [
+						"api",
+						"posts"
+					]
 				}
 			},
 			"response": []
@@ -42,14 +46,15 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:3000/new-post",
+					"raw": "http://localhost:3000/api/posts",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"new-post"
+						"api",
+						"posts"
 					]
 				}
 			},
@@ -61,15 +66,22 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3000/delete-post/post-x",
+					"raw": "http://localhost:3000/api/posts/:slug",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"delete-post",
-						"post-x"
+						"api",
+						"posts",
+						":slug"
+					],
+					"variable": [
+						{
+							"key": "slug",
+							"value": ""
+						}
 					]
 				}
 			},
@@ -96,15 +108,49 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:3000/update-post/post-x",
+					"raw": "http://localhost:3000/api/posts/:slug",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"update-post",
-						"post-x"
+						"api",
+						"posts",
+						":slug"
+					],
+					"variable": [
+						{
+							"key": "slug",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/post/post-x",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/posts/:slug",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"posts",
+						":slug"
+					],
+					"variable": [
+						{
+							"key": "slug",
+							"value": ""
+						}
 					]
 				}
 			},
