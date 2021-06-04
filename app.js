@@ -11,7 +11,7 @@ mongoose.connect(`mongodb://localhost:27017/${process.env.DB_NAME}`, {useNewUrlP
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-app.get("/", (req, res, next) => {
+app.get("/", (req, res) => {
     Post.find().sort({created_at: -1}).exec() // cari semua data
 
     .then((foundPosts) => {
@@ -34,7 +34,7 @@ app.get("/", (req, res, next) => {
     });
 });
 
-app.post('/new-post', (req, res, next) => {
+app.post('/new-post', (req, res) => {
     // mempersiapkan data post baru
     const newPost = new Post({
         title: req.body.title,
@@ -69,59 +69,58 @@ app.post('/new-post', (req, res, next) => {
     });
 });
 
-app.put('/update-post/:postSlug', (req, res, next) => {
-    try {
-        Post.findOneAndUpdate(
-            {slug: req.params.postSlug}, 
-            {
-                title: req.body.title,
-                body: req.body.body,
-                updated_at: new Date()
-            }).exec()
+app.put('/update-post/:postSlug', (req, res) => {
+    // cari post lalu update berdasarkan slug-nya
+    Post.findOneAndUpdate(
+        {slug: req.params.postSlug}, 
+        {
+            title: req.body.title,
+            body: req.body.body,
+            updated_at: new Date()
+        }
+        ).exec()
 
-        .then(updatedPost => {
-            if (updatedPost) {
-                res.status(200).json({
-                    'message': 'Post updated successfully!'
-                });
-            } else {
-                res.status(400).json({
-                    'message': 'There is no such post!'
-                });
-            }
-        })
+    .then(previousPost => {
+        if (previousPost) { // jika berhasil diubah, ditandai dengan data sebelumnya akan dikembalikan
+            res.status(200).json({
+                'message': 'Post updated successfully!',
+                'previous_data': previousPost
+            });
+        } else { // jika gagal diubah, ditandai data sebelumnya tidak ditemukan
+            res.status(400).json({
+                'message': 'There is no such post!'
+            });
+        }
+    })
 
-        .then(null, next);
-    } catch (err) {
+    .catch((err) => { // error handling
         res.status(500).json({
             'message': err
         });
-    }
+    });
 });
 
 app.delete('/delete-post/:postSlug', (req, res, next) => {
-    try {
-        Post.findOneAndDelete({slug: req.params.postSlug}).exec()
+    Post.findOneAndDelete({slug: req.params.postSlug}).exec() // cari dan hapus 1 data berdasarkan slug-nya
 
-        .then(foundPost => {
-            if (foundPost) {
-                res.status(200).json({
-                    'message': 'Post deleted successfully!'
-                });
-            } else {
-                res.status(400).json({
-                    'message': 'Cannot delete post because the post does not found.'
-                });
-            }
-        })
+    .then(deletedPost => {
+        if (deletedPost) { // jika berhasil dihapus
+            res.status(200).json({
+                'message': 'Post deleted successfully!',
+                'deleted_post': deletedPost
+            });
+        } else { // jika gagal dihapus
+            res.status(400).json({
+                'message': 'Cannot delete post because the post does not found.'
+            });
+        }
+    })
 
-        .then(null, next);
-
-    } catch(err) {
+    .catch((err) => { // error handling
         res.status(500).json({
             'message': err
         });
-    }
+    });
 });
 
 app.get('*', (req, res) => {
