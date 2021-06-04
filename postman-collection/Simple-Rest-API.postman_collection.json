@@ -1,0 +1,114 @@
+{
+	"info": {
+		"_postman_id": "d7295319-8399-45d3-b102-6b0b16d88766",
+		"name": "Simple-Rest-API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:3000",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/new-post",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "title",
+							"value": "name_of_the_title",
+							"type": "text"
+						},
+						{
+							"key": "body",
+							"value": "post_body",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/new-post",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"new-post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/delete-post/post-x",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/delete-post/post-x",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"delete-post",
+						"post-x"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/update-post/post-x",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "title",
+							"value": "name_of_the_title",
+							"type": "text"
+						},
+						{
+							"key": "body",
+							"value": "post_body",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/update-post/post-x",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"update-post",
+						"post-x"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
