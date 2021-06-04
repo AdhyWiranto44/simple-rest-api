@@ -12,31 +12,30 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 app.get("/", (req, res, next) => {
-    try {
-        Post.find().sort({created_at: -1}).exec()
-    
-        .then((foundPosts) => {
-            if (foundPosts.length < 1) {
-                res.status(404).json({
-                    'message': "Posts unavailable!"
-                });
-            } else {
-                res.status(200).json({
-                    'message': "Posts found!",
-                    'data': foundPosts
-                });
-            }
-        })
-    
-        .then(null, next);
-    } catch (err) {
-        res.status(400).json({
+    Post.find().sort({created_at: -1}).exec() // cari semua data
+
+    .then((foundPosts) => {
+        if (foundPosts.length < 1) { // jika tidak ada data
+            res.status(404).json({
+                'message': "Posts unavailable!"
+            });
+        } else {
+            res.status(200).json({ // jika ketemu, tampilkan
+                'message': "Posts found!",
+                'data': foundPosts
+            });
+        }
+    })
+
+    .catch(err => { // error handling
+        res.status(500).json({
             'message': 'Error: ' + err
         });
-    }
+    });
 });
 
 app.post('/new-post', (req, res, next) => {
+    // mempersiapkan data post baru
     const newPost = new Post({
         title: req.body.title,
         slug: req.body.title.replace(/\s+/g, '-').toLowerCase(),
@@ -45,15 +44,15 @@ app.post('/new-post', (req, res, next) => {
         updated_at: new Date,
     });
 
-    Post.find({slug: newPost.slug}).exec()
+    Post.find({slug: newPost.slug}).exec() // cek dahulu apakah sudah ada post title yang sama
 
     .then(foundPost => {
-        if (foundPost.length > 0) {
+        if (foundPost.length > 0) { // jika ada
             res.status(400).json({
                 'message': 'There is post title like your input, please try again with another title.'
             });
         } else {
-            return newPost.save();
+            return newPost.save(); // jika belum ada, maka tambahkan post baru
         }
     })
     
@@ -63,7 +62,7 @@ app.post('/new-post', (req, res, next) => {
         });
     })
 
-    .catch((err) => {
+    .catch((err) => { // error handling jika inputan tidak sesuai
         res.status(400).json({
             'message': err.toString().split(",")
         });
