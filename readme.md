@@ -20,6 +20,9 @@ DELETE   /api/posts/:slug
 # Install dependencies
 npm install
 
+# Setup Environment Variable
+mv .env.example .env
+
 # Run
 npm start
 

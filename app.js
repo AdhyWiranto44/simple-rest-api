@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const Post = require('./models/Post.js');
+const PORT = 3000;
 
 const app = express();
 
@@ -153,5 +154,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(process.env.PORT, () => {
-    console.log(`http://localhost:${process.env.PORT}`);
+    console.log(`http://localhost:${PORT}`);
 });
