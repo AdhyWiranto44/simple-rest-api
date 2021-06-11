@@ -1,16 +1,15 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const Post = require('./models/Post.js');
 const PORT = 3000;
 
 const app = express();
 
-mongoose.connect(`mongodb://localhost:27017/${process.env.DB_NAME}`, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(`mongodb://localhost:27017/${process.env.DB_NAME}`, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
 
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
 app.get("/api/posts", (req, res) => {
     Post.find().sort({created_at: -1}).exec() // cari semua data
@@ -153,6 +152,6 @@ app.get('*', (req, res) => {
     });
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(PORT, () => {
     console.log(`http://localhost:${PORT}`);
 });
