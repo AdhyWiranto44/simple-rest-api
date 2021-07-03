@@ -40,7 +40,7 @@ mv .env.example .env
 - ganti nama yourDBName sesuai dengan keinginan, misalkan simpleblogDB
 
 # Run
-npm start
+npm start atau nodemon . atau node .
 
 ```
 
